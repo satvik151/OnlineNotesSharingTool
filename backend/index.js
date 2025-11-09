@@ -2,7 +2,7 @@
 require('dotenv').config();
 
 // IMPORTS
-const ADMIN_UIDS = ['Ua0vFdHyJqS6SDu52fZ9nG2TUtM2'];
+const ADMIN_UIDS = ['Ua0vFdHyJqS6SDu52fZ9nG2TUtM2','T2W0p3XbL2NkyuThucp6NeF7iGj2'];
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');      // <-- You need this for MongoDB!
@@ -82,11 +82,10 @@ app.get('/notes', verifyFirebaseToken, async (req, res) => {
 });
 
 
+// ...existing code...
 app.patch('/notes/:id/approve', verifyFirebaseToken, async (req, res) => {
   try {
     // Only allow admins to approve notes
-    const ADMIN_UIDS = ['Ua0vFdHyJqS6SDu52fZ9nG2TUtM2'];
-
     console.log('User trying to approve:', req.user.uid);
     console.log('Admin UIDs:', ADMIN_UIDS);
 
@@ -94,11 +93,10 @@ app.patch('/notes/:id/approve', verifyFirebaseToken, async (req, res) => {
       return res.status(403).json({ error: 'Access denied: Admins only' });
     }
 
-    // Find the note by ID and update approved = true
     const note = await Note.findByIdAndUpdate(
       req.params.id,
       { approved: true },
-      { new: true } // return the updated document
+      { new: true }
     );
 
     if (!note) {
@@ -110,10 +108,10 @@ app.patch('/notes/:id/approve', verifyFirebaseToken, async (req, res) => {
     res.status(500).json({ error: 'Server error while approving note' });
   }
 });
+// ...existing code...
 
 app.get('/notes/:id/download', verifyFirebaseToken, async (req, res) => {
   try {
-    const ADMIN_UIDS = ['your-admin-uid-here']; // Keep this in sync!
 
     // Find the note by ID
     const note = await Note.findById(req.params.id);
@@ -151,7 +149,6 @@ app.get('/my-notes', verifyFirebaseToken, async (req, res) => {
 
 app.get('/notes/search', verifyFirebaseToken, async (req, res) => {
   try {
-    const ADMIN_UIDS = ['your-admin-uid-here'];
     const filters = {};
 
     // Add filters based on query parameters
